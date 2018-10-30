@@ -1,2 +1,1 @@
-# Facade
-Pattern Facade Implementations
+# Pattern Facade Implementations
