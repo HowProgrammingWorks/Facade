@@ -1,0 +1,42 @@
+'use strict';
+
+const timeoutCollection = timeout => {
+  const collection = new Map();
+  const timers = new Map();
+  const facade = {};
+
+  facade.set = (key, value) => {
+    const prevTimer = timers.get(key);
+    if (prevTimer) clearTimeout(prevTimer);
+    const timer = setTimeout(() => {
+      collection.delete(key);
+    }, timeout);
+    collection.set(key, value);
+    timers.set(key, timer);
+  };
+
+  facade.get = key => collection.get(key);
+
+  facade.delete = key => {
+    const timer = timers.get(key);
+    if (timer) {
+      clearTimeout(timer);
+      collection.delete(key);
+      timers.delete(key);
+    }
+  };
+
+  facade.toArray = () => [...collection.entries()];
+
+  return facade;
+};
+
+// Usage
+
+const hash = timeoutCollection(1000);
+hash.set('uno', 1);
+setTimeout(() => {
+  hash.set('due', 2);
+  hash.set('tre', 3);
+  console.dir({ array: hash.toArray() });
+}, 1500);
