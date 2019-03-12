@@ -68,10 +68,10 @@ class Task extends EventEmitter {
   run() {
     if (!this.active || this.running) return false;
     this.running = true;
-    this.emit('begin');
+    this.emit('begin', this);
     this.exec((err, res) => {
-      if (err) this.emit('error', err);
-      this.emit('end', res);
+      if (err) this.emit('error', err, this);
+      this.emit('end', res, this);
       this.count++;
       this.running = false;
     });
@@ -91,12 +91,12 @@ class Scheduler extends EventEmitter {
     this.tasks.set(name, task);
     task.on('error', err => {
       this.logger.error(task.name + '\t' + err.message);
-      this.emit('error', err);
+      this.emit('error', err, task);
     });
     task.on('begin', () => {
       this.logger.info(task.name + '\tbegin');
     });
-    task.on('end', res => {
+    task.on('end', (res = '') => {
       this.logger.warn(task.name + '\tend\t' + res);
     });
     task.start();
@@ -120,18 +120,18 @@ class Scheduler extends EventEmitter {
 
 const scheduler = new Scheduler();
 
-scheduler.on('error', err => {
-  console.log(err.stack);
+scheduler.on('error', (err, task) => {
+  console.log(`Error in ${task.name}: ${err.stack}`);
   //process.exit(1);
 });
 
-scheduler.task('name1', '2019-03-12T14:30Z', done => {
+scheduler.task('name1', '2019-03-12T14:37Z', done => {
   setTimeout(() => {
     done(null, 'task successed');
   }, 1000);
 });
 
-scheduler.task('name2', '2019-03-12T14:31Z', done => {
+scheduler.task('name2', '2019-03-12T14:37Z', done => {
   setTimeout(() => {
     done(new Error('task failed'));
   }, 1100);
