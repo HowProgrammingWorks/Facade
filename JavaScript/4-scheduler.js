@@ -6,17 +6,21 @@ class Logger {
   static color(level) {
     return Logger.COLORS[level] || Logger.COLORS.info;
   }
+
   log(level, s) {
     const date = new Date().toISOString();
     const color = Logger.color(level);
     console.log(color + date + '\t' + s + '\x1b[0m');
   }
+
   warn(s) {
     this.log('warn', s);
   }
+
   error(s) {
     this.log('error', s);
   }
+
   info(s) {
     this.log('info', s);
   }
@@ -46,9 +50,11 @@ class Task extends EventEmitter {
     this.count = 0;
     this.timer = null;
   }
+
   get active() {
     return !!this.timer;
   }
+
   start() {
     this.stop();
     if (this.running) return false;
@@ -59,12 +65,14 @@ class Task extends EventEmitter {
     }, time);
     return true;
   }
+
   stop() {
     if (!this.active || this.running) return false;
     this.clear(this.timer);
     this.timer = null;
     return true;
   }
+
   run() {
     if (!this.active || this.running) return false;
     this.running = true;
@@ -85,6 +93,7 @@ class Scheduler extends EventEmitter {
     this.tasks = new Map();
     this.logger = new Logger();
   }
+
   task(name, time, exec) {
     this.stop(name);
     const task = new Task(name, time, exec);
@@ -102,6 +111,7 @@ class Scheduler extends EventEmitter {
     task.start();
     return task;
   }
+
   stop(name) {
     const task = this.tasks.get(name);
     if (task) {
@@ -109,6 +119,7 @@ class Scheduler extends EventEmitter {
       this.tasks.delete(name);
     }
   }
+
   stopAll() {
     for (const name of this.tasks.keys()) {
       this.stop(name);
