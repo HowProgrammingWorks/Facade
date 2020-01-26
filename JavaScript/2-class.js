@@ -13,6 +13,7 @@ class TimeoutCollection {
     const timeout = setTimeout(() => {
       this.delete(key);
     }, this.timeout);
+    timeout.unref();
     this.collection.set(key, value);
     this.timers.set(key, timeout);
   }

@@ -1,6 +1,7 @@
 'use strict';
 
-// Facade for Map and Map or Timers
+// Facade that wraps Map and Node.js Timers to provide a simple interface for a
+// collection with values that have expiration timeout.
 
 const TimeoutCollection = function(timeout) {
   this.timeout = timeout;
@@ -14,6 +15,7 @@ TimeoutCollection.prototype.set = function(key, value) {
   const timeout = setTimeout(() => {
     this.delete(key);
   }, this.timeout);
+  timeout.unref();
   this.collection.set(key, value);
   this.timers.set(key, timeout);
 };

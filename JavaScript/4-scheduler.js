@@ -132,7 +132,7 @@ class Scheduler extends EventEmitter {
 const scheduler = new Scheduler();
 
 scheduler.on('error', (err, task) => {
-  console.log(`Error in ${task.name}: ${err.stack}`);
+  console.log(`Error in ${task.name}:\n ${err.stack}`);
   //process.exit(1);
 });
 
