@@ -98,7 +98,7 @@ class Scheduler extends EventEmitter {
     this.stop(name);
     const task = new Task(name, time, exec);
     this.tasks.set(name, task);
-    task.on('error', err => {
+    task.on('error', (err) => {
       this.logger.error(task.name + '\t' + err.message);
       this.emit('error', err, task);
     });
@@ -136,25 +136,25 @@ scheduler.on('error', (err, task) => {
   //process.exit(1);
 });
 
-scheduler.task('name1', '2019-03-12T14:37Z', done => {
+scheduler.task('name1', '2019-03-12T14:37Z', (done) => {
   setTimeout(() => {
     done(null, 'task successed');
   }, 1000);
 });
 
-scheduler.task('name2', '2019-03-12T14:37Z', done => {
+scheduler.task('name2', '2019-03-12T14:37Z', (done) => {
   setTimeout(() => {
     done(new Error('task failed'));
   }, 1100);
 });
 
-scheduler.task('name3', 500, done => {
+scheduler.task('name3', 500, (done) => {
   setTimeout(() => {
     done(null, 'task successed');
   }, 1200);
 });
 
-scheduler.task('name4', 800, done => {
+scheduler.task('name4', 800, (done) => {
   setTimeout(() => {
     done(new Error('task failed'));
   }, 2000);

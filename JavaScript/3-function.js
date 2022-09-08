@@ -1,6 +1,6 @@
 'use strict';
 
-const timeoutCollection = interval => {
+const timeoutCollection = (timeout) => {
   const collection = new Map();
   const timers = new Map();
 
@@ -17,9 +17,9 @@ const timeoutCollection = interval => {
     timers.set(key, timer);
   };
 
-  facade.get = key => collection.get(key);
+  facade.get = (key) => collection.get(key);
 
-  facade.delete = key => {
+  facade.delete = (key) => {
     const timer = timers.get(key);
     if (timer) {
       clearTimeout(timer);
