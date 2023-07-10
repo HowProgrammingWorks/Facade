@@ -1,6 +1,6 @@
 'use strict';
 
-const timeoutCollection = (timeout) => {
+const timeoutCollection = (interval) => {
   const collection = new Map();
   const timers = new Map();
 
