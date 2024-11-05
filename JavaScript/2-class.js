@@ -53,5 +53,4 @@ setTimeout(() => {
     hash.set('quattro', 4);
     console.dir({ array: hash.toArray() });
   }, 500);
-
 }, 1500);
