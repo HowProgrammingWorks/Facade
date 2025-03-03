@@ -4,9 +4,9 @@ const timeoutCollection = (interval) => {
   const collection = new Map();
   const timers = new Map();
 
-  const facade = {};
+  const instance = {};
 
-  facade.set = (key, value) => {
+  instance.set = (key, value) => {
     const timer = timers.get(key);
     if (timer) clearTimeout(timer);
     const timeout = setTimeout(() => {
@@ -17,9 +17,9 @@ const timeoutCollection = (interval) => {
     timers.set(key, timer);
   };
 
-  facade.get = (key) => collection.get(key);
+  instance.get = (key) => collection.get(key);
 
-  facade.delete = (key) => {
+  instance.delete = (key) => {
     const timer = timers.get(key);
     if (timer) {
       clearTimeout(timer);
@@ -28,9 +28,9 @@ const timeoutCollection = (interval) => {
     }
   };
 
-  facade.toArray = () => [...collection.entries()];
+  instance.toArray = () => [...collection.entries()];
 
-  return facade;
+  return instance;
 };
 
 // Usage
