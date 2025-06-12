@@ -2,39 +2,40 @@
 
 const timeoutCollection = (interval) => {
   const collection = new Map();
-  const timers = new Map();
+  const expirations = new Map();
 
-  const instance = {};
-
-  instance.set = (key, value) => {
-    const timer = timers.get(key);
-    if (timer) clearTimeout(timer);
-    const timeout = setTimeout(() => {
+  return {
+    set(key, value) {
+      const expiration = Date.now() + interval;
+      collection.set(key, value);
+      expirations.set(key, expiration);
+      return this;
+    },
+    get(key) {
+      this.cleanup();
+      return collection.get(key);
+    },
+    delete(key) {
       collection.delete(key);
-    }, interval);
-    timeout.unref();
-    collection.set(key, value);
-    timers.set(key, timer);
-  };
-
-  instance.get = (key) => collection.get(key);
-
-  instance.delete = (key) => {
-    const timer = timers.get(key);
-    if (timer) {
-      clearTimeout(timer);
-      collection.delete(key);
-      timers.delete(key);
+      expirations.delete(key);
+    },
+    toArray() {
+      this.cleanup();
+      return [...collection.entries()];
+    },
+    cleanup() {
+      const now = Date.now();
+      for (const [key, expiration] of expirations.entries()) {
+        if (now >= expiration) {
+          collection.delete(key);
+          expirations.delete(key);
+        }
+      }
     }
   };
-
-  instance.toArray = () => [...collection.entries()];
-
-  return instance;
 };
 
 // Usage
-
 const hash = timeoutCollection(1000);
 hash.set('uno', 1);
 console.dir({ array: hash.toArray() });
@@ -49,5 +50,6 @@ setTimeout(() => {
   setTimeout(() => {
     hash.set('quattro', 4);
     console.dir({ array: hash.toArray() });
+    hash.cleanup(); // Manually trigger cleanup
   }, 500);
 }, 1500);
