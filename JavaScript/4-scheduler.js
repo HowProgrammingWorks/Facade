@@ -10,7 +10,7 @@ class Logger {
   log(level, s) {
     const date = new Date().toISOString();
     const color = Logger.color(level);
-    console.log(color + date + '\t' + s + '\x1b[0m');
+    console.log(`${color}${date}\t${s}\x1b[0m`);
   }
 
   warn(s) {
@@ -99,14 +99,14 @@ class Scheduler extends EventEmitter {
     const task = new Task(name, time, exec);
     this.tasks.set(name, task);
     task.on('error', (err) => {
-      this.logger.error(task.name + '\t' + err.message);
+      this.logger.error(`${task.name}\t${err.message}`);
       this.emit('error', err, task);
     });
     task.on('begin', () => {
-      this.logger.info(task.name + '\tbegin');
+      this.logger.info(`${task.name}\tbegin`);
     });
     task.on('end', (res = '') => {
-      this.logger.warn(task.name + '\tend\t' + res);
+      this.logger.warn(`${task.name}\tend\t${res}`);
     });
     task.start();
     return task;
@@ -138,7 +138,7 @@ scheduler.on('error', (err, task) => {
 
 scheduler.task('name1', '2019-03-12T14:37Z', (done) => {
   setTimeout(() => {
-    done(null, 'task successed');
+    done(null, 'task succeeded');
   }, 1000);
 });
 
@@ -150,7 +150,7 @@ scheduler.task('name2', '2019-03-12T14:37Z', (done) => {
 
 scheduler.task('name3', 500, (done) => {
   setTimeout(() => {
-    done(null, 'task successed');
+    done(null, 'task succeeded');
   }, 1200);
 });
 
